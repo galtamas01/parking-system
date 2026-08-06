@@ -1,9 +1,20 @@
 {
   "name": "parking-system",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "start:docker": "npx prisma migrate deploy && npx tsx prisma/seed.ts && npx tsx src/server.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -11,6 +22,7 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^26.1.2",
+    "dotenv": "^17.4.2",
     "prisma": "^7.9.1",
     "tsx": "^4.23.9",
     "typescript": "^7.0.2",
@@ -20,8 +32,10 @@
     "@fastify/swagger": "^9.8.1",
     "@fastify/swagger-ui": "^6.1.1",
     "@fastify/type-provider-typebox": "^6.1.0",
+    "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "@sinclair/typebox": "^0.34.52",
-    "fastify": "^5.11.2"
+    "fastify": "^5.11.2",
+    "pg": "^8.22.0"
   }
 }

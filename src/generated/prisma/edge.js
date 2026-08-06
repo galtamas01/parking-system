@@ -92,9 +92,45 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.ParkingSpotScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  type: 'type',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ReservationScalarFieldEnum = {
+  id: 'id',
+  parkingSpotId: 'parkingSpotId',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+exports.ReservationStatus = exports.$Enums.ReservationStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.SpotType = exports.$Enums.SpotType = {
+  STANDARD: 'STANDARD',
+  DISABLED: 'DISABLED',
+  ELECTRIC: 'ELECTRIC'
+};
 
 exports.Prisma.ModelName = {
-
+  ParkingSpot: 'ParkingSpot',
+  Reservation: 'Reservation'
 };
 /**
  * Create the Client
@@ -104,14 +140,14 @@ const config = {
   "clientVersion": "7.9.1",
   "engineVersion": "e922089b7d7502aff4249d5da3420f6fa55fc6ad",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n"
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum ReservationStatus {\n  ACTIVE\n  CANCELLED\n}\n\nenum SpotType {\n  STANDARD\n  DISABLED\n  ELECTRIC\n}\n\nmodel ParkingSpot {\n  id           Int           @id @default(autoincrement())\n  code         String        @unique\n  type         SpotType      @default(STANDARD)\n  reservations Reservation[]\n  createdAt    DateTime      @default(now()) @db.Timestamptz\n}\n\nmodel Reservation {\n  id            Int               @id @default(autoincrement())\n  parkingSpot   ParkingSpot       @relation(fields: [parkingSpotId], references: [id])\n  parkingSpotId Int\n  startTime     DateTime          @db.Timestamptz\n  endTime       DateTime          @db.Timestamptz\n  status        ReservationStatus @default(ACTIVE)\n  createdAt     DateTime          @default(now()) @db.Timestamptz\n\n  @@index([parkingSpotId])\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"ParkingSpot\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"SpotType\"},{\"name\":\"reservations\",\"kind\":\"object\",\"type\":\"Reservation\",\"relationName\":\"ParkingSpotToReservation\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Reservation\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"parkingSpot\",\"kind\":\"object\",\"type\":\"ParkingSpot\",\"relationName\":\"ParkingSpotToReservation\"},{\"name\":\"parkingSpotId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"startTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ReservationStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.parameterizationSchema = {
-  strings: JSON.parse("[]"),
-  graph: "AAAA"
+  strings: JSON.parse("[\"where\",\"orderBy\",\"cursor\",\"parkingSpot\",\"reservations\",\"_count\",\"ParkingSpot.findUnique\",\"ParkingSpot.findUniqueOrThrow\",\"ParkingSpot.findFirst\",\"ParkingSpot.findFirstOrThrow\",\"ParkingSpot.findMany\",\"data\",\"ParkingSpot.createOne\",\"ParkingSpot.createMany\",\"ParkingSpot.createManyAndReturn\",\"ParkingSpot.updateOne\",\"ParkingSpot.updateMany\",\"ParkingSpot.updateManyAndReturn\",\"create\",\"update\",\"ParkingSpot.upsertOne\",\"ParkingSpot.deleteOne\",\"ParkingSpot.deleteMany\",\"having\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"ParkingSpot.groupBy\",\"ParkingSpot.aggregate\",\"Reservation.findUnique\",\"Reservation.findUniqueOrThrow\",\"Reservation.findFirst\",\"Reservation.findFirstOrThrow\",\"Reservation.findMany\",\"Reservation.createOne\",\"Reservation.createMany\",\"Reservation.createManyAndReturn\",\"Reservation.updateOne\",\"Reservation.updateMany\",\"Reservation.updateManyAndReturn\",\"Reservation.upsertOne\",\"Reservation.deleteOne\",\"Reservation.deleteMany\",\"Reservation.groupBy\",\"Reservation.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"parkingSpotId\",\"startTime\",\"endTime\",\"ReservationStatus\",\"status\",\"createdAt\",\"equals\",\"in\",\"notIn\",\"not\",\"lt\",\"lte\",\"gt\",\"gte\",\"code\",\"SpotType\",\"type\",\"contains\",\"startsWith\",\"endsWith\",\"every\",\"some\",\"none\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"createMany\",\"set\",\"disconnect\",\"delete\",\"connect\",\"updateMany\",\"deleteMany\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
+  graph: "dhYgCAQAAEwAIC4AAEcAMC8AAAkAEDAAAEcAMDECAAAAATdAAEsAIUABAAAAAUIAAEpCIgEAAAABACAKAwAATwAgLgAATQAwLwAAAwAQMAAATQAwMQIASAAhMgIASAAhM0AASwAhNEAASwAhNgAATjYiN0AASwAhAQMAAHAAIAoDAABPACAuAABNADAvAAADABAwAABNADAxAgAAAAEyAgBIACEzQABLACE0QABLACE2AABONiI3QABLACEDAAAAAwAgAQAABAAwAgAABQAgAQAAAAMAIAEAAAABACAIBAAATAAgLgAARwAwLwAACQAQMAAARwAwMQIASAAhN0AASwAhQAEASQAhQgAASkIiAQQAAG8AIAMAAAAJACABAAAKADACAAABACADAAAACQAgAQAACgAwAgAAAQAgAwAAAAkAIAEAAAoAMAIAAAEAIAUEAABuACAxAgAAAAE3QAAAAAFAAQAAAAFCAAAAQgIBCwAADgAgBDECAAAAATdAAAAAAUABAAAAAUIAAABCAgELAAAQADABCwAAEAAwBQQAAGEAIDECAFcAITdAAFUAIUABAF8AIUIAAGBCIgIAAAABACALAAATACAEMQIAVwAhN0AAVQAhQAEAXwAhQgAAYEIiAgAAAAkAIAsAABUAIAIAAAAJACALAAAVACADAAAAAQAgEgAADgAgEwAAEwAgAQAAAAEAIAEAAAAJACAFBQAAWgAgGAAAWwAgGQAAXgAgGgAAXQAgGwAAXAAgBy4AAEAAMC8AABwAEDAAAEAAMDECADYAITdAADcAIUABAEEAIUIAAEJCIgMAAAAJACABAAAbADAXAAAcACADAAAACQAgAQAACgAwAgAAAQAgAQAAAAUAIAEAAAAFACADAAAAAwAgAQAABAAwAgAABQAgAwAAAAMAIAEAAAQAMAIAAAUAIAMAAAADACABAAAEADACAAAFACAHAwAAWQAgMQIAAAABMgIAAAABM0AAAAABNEAAAAABNgAAADYCN0AAAAABAQsAACQAIAYxAgAAAAEyAgAAAAEzQAAAAAE0QAAAAAE2AAAANgI3QAAAAAEBCwAAJgAwAQsAACYAMAcDAABYACAxAgBXACEyAgBXACEzQABVACE0QABVACE2AABWNiI3QABVACECAAAABQAgCwAAKQAgBjECAFcAITICAFcAITNAAFUAITRAAFUAITYAAFY2IjdAAFUAIQIAAAADACALAAArACACAAAAAwAgCwAAKwAgAwAAAAUAIBIAACQAIBMAACkAIAEAAAAFACABAAAAAwAgBQUAAFAAIBgAAFEAIBkAAFQAIBoAAFMAIBsAAFIAIAkuAAA1ADAvAAAyABAwAAA1ADAxAgA2ACEyAgA2ACEzQAA3ACE0QAA3ACE2AAA4NiI3QAA3ACEDAAAAAwAgAQAAMQAwFwAAMgAgAwAAAAMAIAEAAAQAMAIAAAUAIAkuAAA1ADAvAAAyABAwAAA1ADAxAgA2ACEyAgA2ACEzQAA3ACE0QAA3ACE2AAA4NiI3QAA3ACENBQAAOgAgGAAAPwAgGQAAOgAgGgAAOgAgGwAAOgAgOAIAAAABOQIAAAAEOgIAAAAEOwIAPgAhPAIAAAABPQIAAAABPgIAAAABPwIAAAABCwUAADoAIBoAAD0AIBsAAD0AIDhAAAAAATlAAAAABDpAAAAABDtAADwAITxAAAAAAT1AAAAAAT5AAAAAAT9AAAAAAQcFAAA6ACAaAAA7ACAbAAA7ACA4AAAANgI5AAAANgg6AAAANgg7AAA5NiIHBQAAOgAgGgAAOwAgGwAAOwAgOAAAADYCOQAAADYIOgAAADYIOwAAOTYiCDgCAAAAATkCAAAABDoCAAAABDsCADoAITwCAAAAAT0CAAAAAT4CAAAAAT8CAAAAAQQ4AAAANgI5AAAANgg6AAAANgg7AAA7NiILBQAAOgAgGgAAPQAgGwAAPQAgOEAAAAABOUAAAAAEOkAAAAAEO0AAPAAhPEAAAAABPUAAAAABPkAAAAABP0AAAAABCDhAAAAAATlAAAAABDpAAAAABDtAAD0AITxAAAAAAT1AAAAAAT5AAAAAAT9AAAAAAQ0FAAA6ACAYAAA_ACAZAAA6ACAaAAA6ACAbAAA6ACA4AgAAAAE5AgAAAAQ6AgAAAAQ7AgA-ACE8AgAAAAE9AgAAAAE-AgAAAAE_AgAAAAEIOAgAAAABOQgAAAAEOggAAAAEOwgAPwAhPAgAAAABPQgAAAABPggAAAABPwgAAAABBy4AAEAAMC8AABwAEDAAAEAAMDECADYAITdAADcAIUABAEEAIUIAAEJCIg4FAAA6ACAaAABGACAbAABGACA4AQAAAAE5AQAAAAQ6AQAAAAQ7AQBFACE8AQAAAAE9AQAAAAE-AQAAAAE_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"
 }
 config.compilerWasm = {
   getRuntime: async () => require('./query_compiler_fast_bg.js'),

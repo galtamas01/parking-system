@@ -120,9 +120,45 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.ParkingSpotScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  type: 'type',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ReservationScalarFieldEnum = {
+  id: 'id',
+  parkingSpotId: 'parkingSpotId',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+exports.SpotType = exports.$Enums.SpotType = {
+  STANDARD: 'STANDARD',
+  DISABLED: 'DISABLED',
+  ELECTRIC: 'ELECTRIC'
+};
+
+exports.ReservationStatus = exports.$Enums.ReservationStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED'
+};
 
 exports.Prisma.ModelName = {
-
+  ParkingSpot: 'ParkingSpot',
+  Reservation: 'Reservation'
 };
 
 /**

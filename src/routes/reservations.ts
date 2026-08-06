@@ -1,6 +1,7 @@
 import { type FastifyPluginAsync } from "fastify";
 import { Type } from "typebox"
 import { prisma } from "../plugins/prisma.js";
+import { validateReservationInput } from "../services/reservation.service.js";
 
 export const reservationRoutes: FastifyPluginAsync = async (app) => {
     app.post(
@@ -17,30 +18,26 @@ export const reservationRoutes: FastifyPluginAsync = async (app) => {
             },
         },
         async (request, reply) => {
-            const { parkingSpotId, startTime, endTime } = request.body as any;
-            const start = new Date(startTime);
-            const end = new Date(endTime);
-            const now = new Date();
-
-            if (start < now) {
-                return reply.status(400).send({
-                    error: "Bad Request",
-                    message: "You can't make reservation to a past date"
-                });
+            const body = request.body as {
+                parkingSpotId: number;
+                startTime: string;
+                endTime: string;
             }
 
-            if (start >= end) {
+            try {
+                validateReservationInput(body);
+            } catch (err: any) {
                 return reply.status(400).send({
-                    error: "Bad request",
-                    message: "Start time must be earlier than end time"
+                    error: "Bad Request",
+                    message: err.message,
                 });
             }
 
             const newReservation = await prisma.reservation.create({
                 data: {
-                    parkingSpotId,
-                    startTime: start,
-                    endTime: end,
+                    parkingSpotId: body.parkingSpotId,
+                    startTime: new Date(body.startTime),
+                    endTime: new Date(body.endTime),
                 },
             });
 
@@ -61,7 +58,7 @@ export const reservationRoutes: FastifyPluginAsync = async (app) => {
         },
         async (request, reply) => {
             const { id } = request.params as { id: number };
-            const reservation = prisma.reservation.findUnique({ where: { id } });
+            const reservation = await prisma.reservation.findUnique({ where: { id } });
 
             if (!reservation) {
                 return reply.status(404).send({

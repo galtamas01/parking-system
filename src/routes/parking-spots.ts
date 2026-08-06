@@ -21,7 +21,7 @@ export const parkingSpotRoutes: FastifyPluginAsync = async (app) => {
         "/parking-spots/:id/reservations",
         {
             schema: {
-                tags: ["Parking spots"],
+                tags: ["Parking Spots"],
                 summary: "Active reservations of a selected parking spot",
                 params: Type.Object({
                     id: Type.Integer({ minimum: 1 }),
@@ -31,7 +31,7 @@ export const parkingSpotRoutes: FastifyPluginAsync = async (app) => {
         async (request, reply) => {
             const { id } = request.params as { id: number };
 
-            const reservations = prisma.reservation.findMany({
+            const reservations = await prisma.reservation.findMany({
                 where: {
                     parkingSpotId: id,
                     status: "ACTIVE"

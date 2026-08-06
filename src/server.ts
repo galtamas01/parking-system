@@ -12,19 +12,20 @@ await app.register(swagger, {
 });
 await app.register(swaggerUi, { routePrefix: "/docs" });
 
-await app.register(parkingSpotRoutes);
-await app.register(reservationRoutes);
 
-app.setErrorHandler((err, req, reply) => {
+app.setErrorHandler((err: FastifyError, req, reply) => {
     if (err.validation) {
         return reply.status(400).send({
             statusCode: 400,
-            error: "Bad request",
+            error: "Bad Request",
             message: `Validation error: ${err.message}`
         })
     }
 
-    if (err.code === "P2004" || (err.message && err.message.includes('no_overlapping_active_reservations'))) {
+    const errCode = (err as any).code;
+    const isOverlapError = errCode === "P2039" || err.message?.includes("23P01") || err.message?.includes('no_overlapping_active_reservations');
+    
+    if (isOverlapError) {
         return reply.status(409).send({
             statusCode: 409,
             error: "Conflict",
@@ -40,8 +41,11 @@ app.setErrorHandler((err, req, reply) => {
     });
 });
 
+await app.register(parkingSpotRoutes);
+await app.register(reservationRoutes);
+
 const shutdown = async () => { 
-    await app.close;
+    await app.close();
     process.exit(0)
 };
 process.on("SIGINT", shutdown);

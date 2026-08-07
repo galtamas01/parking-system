@@ -2,7 +2,6 @@ import type { FastifyInstance } from "fastify";
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import { buildApp } from "../src/app.js";
 import { pool, prisma } from "../src/plugins/prisma.js";
-import { parkingSpotRoutes } from "../src/routes/parking-spots.js";
 
 describe("POST /reservations database - overlap", () => {
     let app: FastifyInstance;

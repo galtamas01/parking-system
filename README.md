@@ -1,4 +1,4 @@
-# Parkoló foglalási Rendszer
+# Parkoló foglalási rendszer
 
 Backend szolgáltatás parkolóhelyek és időhöz kötött foglalások kezelésére, ahol az átfedések kiszűrése adatbázis szinten van kikényszerítve. Rövid határidős feladatként készült, a helyességre, a tesztelhetőségre és az egyparancsos indításra fókuszálva.
 

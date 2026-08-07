@@ -85,4 +85,52 @@ describe("POST /reservations database - overlap", () => {
         });
         expect(res.statusCode).toBe(201);
     })
+
+    describe("POST /reservations/:id/cancel", () => {
+    it("Cancels an existing reservation and changes the status to CANCELLED", async () => {
+        const created = await app.inject({
+            method: "POST", 
+            url: "/reservations",
+            payload: range("2999-01-01T10:00:00Z", "2999-01-01T12:00:00Z"),
+        });
+        const id = created.json().id;
+
+        const res = await app.inject({ 
+            method: "POST", 
+            url: `/reservations/${id}/cancel` 
+        });
+        expect(res.statusCode).toBe(200);
+        expect(res.json().cancelled).toMatchObject({ id, status: "CANCELLED" });
+    });
+
+    it("Returns error 404 for cancelling non-existing reservation", async () => {
+        const res = await app.inject({ 
+            method: "POST", 
+            url: "/reservations/9999/cancel" });
+        expect(res.statusCode).toBe(404);
+    });
+
+    it("Rejects the request if ID is not a number", async() => {
+        const res = await app.inject({
+            method: "POST",
+            url: "/reservations/abc/cancel"
+        });
+        expect(res.statusCode).toBe(400);
+    });
+
+    it("Rejects the request if ID in not a valid number", async() => {
+        const resZero = await app.inject({
+            method: "POST",
+            url: "/reservations/0/cancel"
+        });
+        expect(resZero.statusCode).toBe(400);
+
+        const resNeg = await app.inject({
+            method: "POST",
+            url: "/reservations/-3/cancel"
+        });
+        expect(resNeg.statusCode).toBe(400);
+    })
+});
 })
+

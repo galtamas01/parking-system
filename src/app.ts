@@ -4,6 +4,8 @@ import swagger from "@fastify/swagger"
 import swaggerUi from "@fastify/swagger-ui"
 import { parkingSpotRoutes } from "./routes/parking-spots.js"
 import { reservationRoutes } from "./routes/reservations.js"
+import { Prisma } from "./generated/prisma/index.js";
+
 
 export function buildApp() {
     const app = Fastify({logger: true}).withTypeProvider<TypeBoxTypeProvider>();
@@ -32,6 +34,18 @@ export function buildApp() {
                 error: "Conflict",
                 message: "The parking slot is already reserved for that time range"
             });
+        }
+
+        if (err instanceof Prisma.PrismaClientKnownRequestError) {
+
+            if (err.code === "P2003") {
+                const fieldName = err.meta?.field_name as string || "unknown";
+                return reply.status(400).send({
+                    statusCode: 400,
+                    error: "Bad Request",
+                    message: `Reference error: Field ${fieldName} does not exist in database`
+                });
+            }
         }
 
         req.log.error(err);

@@ -103,5 +103,29 @@ describe("Parking Spots API Integration Tests", () => {
             });
             expect(res2.statusCode).toBe(400);
         })
+
+        it("The ID-based reservation query returns reservations related only that ID", async() => {
+            await prisma.reservation.createMany({
+                data: [
+                    { parkingSpotId: 1, startTime: new Date("2999-01-01T10:00:00Z"), endTime: new Date("2999-01-01T12:00:00Z")},
+                    { parkingSpotId: 2, startTime: new Date("2999-01-01T10:00:00Z"), endTime: new Date("2999-01-01T12:00:00Z")}
+                ]
+            });
+            const res = await app.inject({
+                method: "GET",
+                url: "/parking-spots/1/reservations",
+            });
+            expect(res.json()).toHaveLength(1);
+            expect(res.json()[0].parkingSpotId).toBe(1);
+        })
+
+        it("Returns error 404 if queried parking spot does not exist", async() => {
+            const res = await app.inject({
+                method: "GET",
+                url: "/parking-spots/9999/reservations",
+            });
+            expect(res.statusCode).toBe(404);
+            expect(res.json().message).toBe("The given parking spot does not exist");
+        });
     })
 })

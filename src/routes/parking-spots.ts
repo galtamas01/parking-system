@@ -30,6 +30,15 @@ export const parkingSpotRoutes: FastifyPluginAsync = async (app) => {
         },
         async (request, reply) => {
             const { id } = request.params as { id: number };
+            const spot = await prisma.parkingSpot.findUnique({
+                where: { id }
+            });
+
+            if (!spot) {
+                return reply.status(404).send({
+                    message: "The given parking spot does not exist"
+                });
+            }
 
             const reservations = await prisma.reservation.findMany({
                 where: {

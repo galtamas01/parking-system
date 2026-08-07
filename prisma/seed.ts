@@ -6,7 +6,6 @@ const spots = [
     { code: "P-03", type: "STANDARD" },
     { code: "E-01", type: "ELECTRIC" },
     { code: "E-02", type: "ELECTRIC" },
-    { code: "D-01", type: "DISABLED" },
 ] as const;
 
 async function main() {

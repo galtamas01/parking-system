@@ -147,7 +147,6 @@ exports.Prisma.QueryMode = {
 };
 exports.SpotType = exports.$Enums.SpotType = {
   STANDARD: 'STANDARD',
-  DISABLED: 'DISABLED',
   ELECTRIC: 'ELECTRIC'
 };
 

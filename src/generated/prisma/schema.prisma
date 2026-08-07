@@ -19,7 +19,6 @@ enum ReservationStatus {
 
 enum SpotType {
   STANDARD
-  DISABLED
   ELECTRIC
 }
 

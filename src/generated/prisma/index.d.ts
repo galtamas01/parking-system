@@ -38,7 +38,6 @@ export type ReservationStatus = (typeof ReservationStatus)[keyof typeof Reservat
 
 export const SpotType: {
   STANDARD: 'STANDARD',
-  DISABLED: 'DISABLED',
   ELECTRIC: 'ELECTRIC'
 };
 

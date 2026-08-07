@@ -2,7 +2,7 @@
 CREATE TYPE "ReservationStatus" AS ENUM ('ACTIVE', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "SpotType" AS ENUM ('STANDARD', 'DISABLED', 'ELECTRIC');
+CREATE TYPE "SpotType" AS ENUM ('STANDARD', 'ELECTRIC');
 
 -- CreateTable
 CREATE TABLE "ParkingSpot" (

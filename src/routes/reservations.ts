@@ -1,7 +1,7 @@
 import { type FastifyPluginAsync } from "fastify";
 import { Type } from "typebox"
 import { prisma } from "../plugins/prisma.js";
-import { validateReservationInput } from "../services/reservation.service.js";
+import { createReservation, NotFoundError, ValidationError } from "../services/reservation.service.js";
 
 export const reservationRoutes: FastifyPluginAsync = async (app) => {
     app.post(
@@ -23,25 +23,27 @@ export const reservationRoutes: FastifyPluginAsync = async (app) => {
                 startTime: string;
                 endTime: string;
             }
-
             try {
-                validateReservationInput(body);
+                const newReservation = createReservation(body);
+                return reply.status(201).send(newReservation);
             } catch (err: any) {
-                return reply.status(400).send({
-                    error: "Bad Request",
-                    message: err.message,
-                });
+                if (err instanceof NotFoundError) {
+                    return reply.status(404).send({
+                        error: "Not Found",
+                        message: err.message
+                    });
+                }
+
+                if (err instanceof ValidationError) {
+                    return reply.status(400).send({
+                        error: "Bad Request",
+                        message: err.message
+                    });
+                }
+
+                throw err;
             }
-
-            const newReservation = await prisma.reservation.create({
-                data: {
-                    parkingSpotId: body.parkingSpotId,
-                    startTime: new Date(body.startTime),
-                    endTime: new Date(body.endTime),
-                },
-            });
-
-            return reply.status(201).send(newReservation);
+            
         }
     )
 

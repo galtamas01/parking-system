@@ -24,7 +24,7 @@ export const reservationRoutes: FastifyPluginAsync = async (app) => {
                 endTime: string;
             }
             try {
-                const newReservation = createReservation(body);
+                const newReservation = await createReservation(body);
                 return reply.status(201).send(newReservation);
             } catch (err: any) {
                 if (err instanceof NotFoundError) {

@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
+    "pretest": "npm run test:db:setup",
     "start": "node dist/server.js",
     "test": "dotenv -e .env.test -- vitest run",
+    "test:db:setup": "docker compose up -d --wait postgres && (docker compose exec -T postgres psql -U postgres -c \"CREATE DATABASE parking_test_db\" || true) && dotenv -e .env.test -- prisma migrate deploy",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
-    "start:docker": "npx prisma migrate deploy && npx tsx prisma/seed.ts && npx tsx src/server.ts",
-    "test:db": "dotenv -e .env.test -- vitest run tests/reservations.db.test.ts"
+    "start:docker": "npx prisma migrate deploy && npx tsx prisma/seed.ts && npx tsx src/server.ts"
   },
   "keywords": [],
   "author": "",

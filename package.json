@@ -14,9 +14,6 @@
     "start:docker": "npx prisma migrate deploy && npx tsx prisma/seed.ts && npx tsx src/server.ts",
     "test:db": "dotenv -e .env.test -- vitest run tests/reservations.db.test.ts"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
